@@ -20,7 +20,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @RequestMapping
+    @GetMapping
     public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable) {
         Page<ProductDTO> dtos = productService.findAll(pageable);
         return ResponseEntity.ok().body(dtos);

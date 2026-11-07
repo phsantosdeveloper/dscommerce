@@ -6,9 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ph.dev.dscommerce.dto.ProductDTO;
 import ph.dev.dscommerce.entities.Product;
+import ph.dev.dscommerce.exceptions.ResourceNotFoundException;
 import ph.dev.dscommerce.repositories.ProductRepository;
-
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -27,8 +26,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        Optional<Product> result = productRepository.findById(id);
-        Product product = result.get();
+        Product product = findProductById(id);
         return new ProductDTO(product);
     }
 
@@ -42,7 +40,7 @@ public class ProductService {
 
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
-        Product product = productRepository.getReferenceById(id);
+        Product product = findProductById(id);
         copyDtoToEntity(product, dto);
         product = productRepository.save(product);
         return new ProductDTO(product);
@@ -50,8 +48,7 @@ public class ProductService {
 
     @Transactional
     public void delete(Long id) {
-        Optional<Product> result = productRepository.findById(id);
-        Product product = result.get();
+        Product product = findProductById(id);
         productRepository.delete(product);
     }
 
@@ -60,6 +57,13 @@ public class ProductService {
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
         product.setImgUrl(dto.getImgUrl());
+    }
+
+    private Product findProductById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Product not found, id: " + id));
+
+        return product;
     }
 
 }
