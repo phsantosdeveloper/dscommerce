@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ph.dev.dscommerce.dto.ProductDTO;
+import ph.dev.dscommerce.dto.ProductMinDTO;
 import ph.dev.dscommerce.entities.Product;
 import ph.dev.dscommerce.exceptions.ResourceNotFoundException;
 import ph.dev.dscommerce.repositories.ProductRepository;
@@ -19,9 +20,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAll(String name, Pageable pageable) {
+    public Page<ProductMinDTO> findAll(String name, Pageable pageable) {
         Page<Product> products = productRepository.searchByName(name, pageable);
-        return products.map(product -> new ProductDTO(product));
+        return products.map(product -> new ProductMinDTO(product));
     }
 
     @Transactional(readOnly = true)

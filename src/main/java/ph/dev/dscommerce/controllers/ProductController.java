@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ph.dev.dscommerce.dto.ProductDTO;
+import ph.dev.dscommerce.dto.ProductMinDTO;
 import ph.dev.dscommerce.services.ProductService;
 
 import java.net.URI;
@@ -23,9 +24,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> findAll(@RequestParam(name = "name", defaultValue = "")
+    public ResponseEntity<Page<ProductMinDTO>> findAll(@RequestParam(name = "name", defaultValue = "")
                                                         String name, Pageable pageable) {
-        Page<ProductDTO> dtos = productService.findAll(name, pageable);
+        Page<ProductMinDTO> dtos = productService.findAll(name, pageable);
         return ResponseEntity.ok().body(dtos);
     }
 
