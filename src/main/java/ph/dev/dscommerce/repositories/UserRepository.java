@@ -6,6 +6,7 @@ import ph.dev.dscommerce.entities.User;
 import ph.dev.dscommerce.projections.UserDetailsProjection;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -15,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "INNER JOIN tb_role r ON r.id = ur.role_id " +
             "WHERE u.email = :email")
     List<UserDetailsProjection> searchUserAndRolesByUsername(String email);
+
+    Optional<User> findByEmail(String email);
 }
