@@ -1,10 +1,11 @@
 package ph.dev.dscommerce.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import ph.dev.dscommerce.entities.Category;
 import ph.dev.dscommerce.entities.Product;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductDTO {
 
@@ -24,6 +25,9 @@ public class ProductDTO {
 
     private String imgUrl;
 
+    @NotEmpty(message = "Must have at least one category")
+    private List<CategoryDTO> categories = new ArrayList<>();
+
     public ProductDTO() {
     }
 
@@ -41,6 +45,9 @@ public class ProductDTO {
         description = product.getDescription();
         price = product.getPrice();
         imgUrl = product.getImgUrl();
+        for(Category cat : product.getCategories()) {
+            categories.add(new CategoryDTO(cat));
+        }
     }
 
     public Long getId() {
@@ -61,5 +68,9 @@ public class ProductDTO {
 
     public String getImgUrl() {
         return imgUrl;
+    }
+
+    public List<CategoryDTO> getCategories() {
+        return categories;
     }
 }

@@ -4,8 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ph.dev.dscommerce.dto.CategoryDTO;
 import ph.dev.dscommerce.dto.ProductDTO;
 import ph.dev.dscommerce.dto.ProductMinDTO;
+import ph.dev.dscommerce.entities.Category;
 import ph.dev.dscommerce.entities.Product;
 import ph.dev.dscommerce.exceptions.ResourceNotFoundException;
 import ph.dev.dscommerce.repositories.ProductRepository;
@@ -34,7 +36,7 @@ public class ProductService {
     @Transactional
     public ProductDTO insert(ProductDTO dto) {
         Product product = new Product();
-        copyDtoToEntity(product, dto);
+        copyDtoToEntity(dto, product);
         product = productRepository.save(product);
         return new ProductDTO(product);
     }
@@ -42,7 +44,7 @@ public class ProductService {
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         Product product = findProductById(id);
-        copyDtoToEntity(product, dto);
+        copyDtoToEntity(dto, product);
         product = productRepository.save(product);
         return new ProductDTO(product);
     }
@@ -53,11 +55,18 @@ public class ProductService {
         productRepository.delete(product);
     }
 
-    private void copyDtoToEntity(Product product, ProductDTO dto) {
+    private void copyDtoToEntity(ProductDTO dto, Product product) {
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
         product.setImgUrl(dto.getImgUrl());
+
+        product.getCategories().clear();
+        for(CategoryDTO catDto : dto.getCategories()) {
+            Category cat = new Category();
+            cat.setId(catDto.getId());
+            product.getCategories().add(cat);
+        }
     }
 
     private Product findProductById(Long id) {
