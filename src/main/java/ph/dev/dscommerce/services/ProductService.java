@@ -69,6 +69,7 @@ public class ProductService {
         }
     }
 
+    @Transactional(readOnly = true)
     private Product findProductById(Long id) {
         Product searchedProduct = productRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Product not found, id: " + id));

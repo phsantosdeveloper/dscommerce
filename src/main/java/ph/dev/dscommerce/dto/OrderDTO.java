@@ -1,5 +1,6 @@
 package ph.dev.dscommerce.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import ph.dev.dscommerce.entities.Order;
 import ph.dev.dscommerce.entities.OrderItem;
 import ph.dev.dscommerce.entities.enums.OrderStatus;
@@ -18,7 +19,11 @@ public class OrderDTO {
 
     private PaymentDTO payment;
 
+    @NotEmpty(message = "Must have at least one item")
     private List<OrderItemDTO> items = new ArrayList<>();
+
+    public OrderDTO() {
+    }
 
     public OrderDTO(Long id, Instant moment, OrderStatus status, ClientDTO client, PaymentDTO payment) {
         this.id = id;
