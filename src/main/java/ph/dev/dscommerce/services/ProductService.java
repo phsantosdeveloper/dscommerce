@@ -70,10 +70,10 @@ public class ProductService {
     }
 
     private Product findProductById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(
+        Product searchedProduct = productRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Product not found, id: " + id));
 
-        return product;
+        return searchedProduct;
     }
 
 }
