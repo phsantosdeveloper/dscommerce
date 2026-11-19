@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ph.dev.dscommerce.dto.CustomError;
 import ph.dev.dscommerce.dto.ValidationError;
+import ph.dev.dscommerce.exceptions.ForbiddenException;
 import ph.dev.dscommerce.exceptions.ResourceNotFoundException;
 
 import java.time.Instant;
@@ -49,6 +50,17 @@ public class GlobalExceptionHandler {
         for(FieldError f : e.getBindingResult().getFieldErrors()) {
             err.addError(f.getField(), f.getDefaultMessage());
         }
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<CustomError> forbidden(ForbiddenException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        String error = "Access prohibited";
+        String message = "User does not have access to this operation";
+
+        CustomError err = new CustomError(Instant.now(), status.value(), error, message, request.getRequestURI());
 
         return ResponseEntity.status(status).body(err);
     }

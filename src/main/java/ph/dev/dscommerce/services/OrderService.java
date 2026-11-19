@@ -19,12 +19,14 @@ import java.time.Instant;
 @Service
 public class OrderService {
 
+    private final AuthService authService;
     private final OrderItemRepository orderItemRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserService userService;
 
-    public OrderService(OrderItemRepository orderItemRepository, OrderRepository orderRepository, ProductRepository productRepository, UserService userService) {
+    public OrderService(AuthService authService, OrderItemRepository orderItemRepository, OrderRepository orderRepository, ProductRepository productRepository, UserService userService) {
+        this.authService = authService;
         this.orderItemRepository = orderItemRepository;
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
@@ -34,6 +36,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public OrderDTO findById(Long id) {
         Order order = findByOrder(id);
+        authService.validateSelfOfAdmin(order.getClient().getId());
         return new OrderDTO(order);
     }
 
